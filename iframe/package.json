@@ -1,0 +1,11 @@
+{
+  "name": "iframe",
+  "description": "",
+  "version": "0.0.1",
+  "main": "./build/module.js",
+  "author": "taky@taky.com",
+  "dependencies": {
+    "@babel/polyfill": "^7.12.1",
+    "lodash": "^4.17.20"
+  }
+}
