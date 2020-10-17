@@ -1,11 +1,15 @@
 ```
 
-db    db d8888b. db      .d8888.
-`8b  d8' 88  `8D 88      88'  YP
- `8bd8'  88   88 88      `8bo.
- .dPYb.  88   88 88        `Y8b.
-.8P  Y8. 88  .8D 88booo. db   8D
-YP    YP Y8888D' Y88888P `8888Y'
+
+              888                        888
+              888                        888
+              888                        888
+888  888  .d88888  .d88b.  88888b.d88b.  888 .d8888b
+`Y8bd8P' d88" 888 d88""88b 888 "888 "88b 888 88K
+  X88K   888  888 888  888 888  888  888 888 "Y8888b.
+.d8""8b. Y88b 888 Y88..88P 888  888  888 888      X88
+888  888  "Y88888  "Y88P"  888  888  888 888  88888P'
+
 
 ```
 
@@ -77,6 +81,8 @@ see example usage in `test/example/`
 |`sync`|`([cb])`|syncs all items from frame-storage into the top documents localStorage object|none|
 
 `client.session` is available containing the user's unique id and unix time of original session creation always after `client.ready` has returned.
+
+---
 
 #### @todo:
 - [ ] cookie fallbacks
