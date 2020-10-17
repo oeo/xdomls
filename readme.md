@@ -9,7 +9,7 @@ YP    YP Y8888D' Y88888P `8888Y'
 
 ```
 
-*xdls* is a cross-domain localstorage implementation that uses `postMessage` to communicate with a child frame to achieve consistent
+*xdomls* is a cross-domain localstorage implementation that uses `postMessage` to communicate with a child frame to achieve consistent
 storage across domains.
 
 ## usage:
@@ -17,12 +17,12 @@ storage across domains.
 
 ## install via npm
 ```
-npm install xdls
+npm install xdomls
 ```
 
 use in bundled apps
 ```javascript
-XDLS = require('xdls')
+XDLS = require('xdomls')
 ```
 
 or simply include `client/build/module.min.js` in your browser which exports `window.XDLS`
@@ -50,7 +50,7 @@ client.ready(function(){
     console.log('`ping()` result:',r)
   })
 
-  // set a value (doesn't require callback)
+  // set a value that expires in 30 seconds (doesn't require callback)
   client.set('hello-temp','temp-value',30);
 
   // delete a value (doesn't require callback)
@@ -79,7 +79,8 @@ see example usage in `test/example/`
 `client.session` is available containing the user's unique id and unix time of original session creation always after `client.ready` has returned.
 
 #### @todo:
-[ ] - option to automatically sync to frame when localStorage is changed on the parent
-[ ] - remove dependancy on lodash, reduce size
-[ ] - cookie fallbacks
+- [ ] cookie fallbacks
+- [ ] hash location parsing fallback for devices without `postMessage`
+- [ ] option to automatically sync to iframe when localStorage is changed on the parent
+- [ ] remove dependancy on lodash, reduce size
 
