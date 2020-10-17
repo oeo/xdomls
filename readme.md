@@ -26,7 +26,7 @@ XDLS = require('xdomls')
 ```
 
 ### use in browser
-or simply include `client/build/module.min.js` in your browser which exports `window.XDLS`
+or simply include `client/build/module.min.js` in your browser which exposes `window.XDLS`
 
 ```javascript
 var iframe_url = 'http://yourcdn.com/iframe.html'
