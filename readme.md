@@ -1,6 +1,4 @@
 ```
-
-
               888                        888
               888                        888
               888                        888
@@ -9,8 +7,6 @@
   X88K   888  888 888  888 888  888  888 888 "Y8888b.
 .d8""8b. Y88b 888 Y88..88P 888  888  888 888      X88
 888  888  "Y88888  "Y88P"  888  888  888 888  88888P'
-
-
 ```
 
 `xdomls` is a cross-domain localstorage implementation that uses `postMessage` to communicate with a child frame to achieve consistent
