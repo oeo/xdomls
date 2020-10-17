@@ -19,7 +19,7 @@ storage across domains.
 ## usage:
 - upload `iframe/build/index.html` to a common domain or public s3 bucket
 
-## install via npm
+### install via npm
 ```
 npm install xdomls
 ```
@@ -29,6 +29,7 @@ use in bundled apps
 XDLS = require('xdomls')
 ```
 
+### use in browser
 or simply include `client/build/module.min.js` in your browser which exports `window.XDLS`
 
 ```javascript
