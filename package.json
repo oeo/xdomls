@@ -1,5 +1,5 @@
 {
-  "name": "xdls",
+  "name": "xdomls",
   "version": "1.0.0",
   "description": "a cross domain localstorage interface",
   "main": "./client/build/module.min.js",
