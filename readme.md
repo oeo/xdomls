@@ -83,8 +83,8 @@ see example usage in `test/example/`
 ---
 
 #### @todo:
-- [ ] cookie fallbacks
-- [ ] hash location parsing fallback for devices without `postMessage`
-- [ ] option to automatically sync to iframe when localStorage is changed on the parent
-- [ ] remove dependancy on lodash, reduce size
+- [ ] cookie fallback
+- [ ] hash location parsing fallback for devices not supporting `postMessage` coms
+- [ ] option to automatically sync to iframe when localStorage is changed on the parent (watch window.top localStorage object)
+- [ ] remove lodash
 
