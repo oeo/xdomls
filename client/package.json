@@ -2,7 +2,7 @@
   "name": "client",
   "description": "",
   "version": "0.0.1",
-  "main": "./build/module.js",
+  "main": "./build/module.min.js",
   "author": "taky@taky.com",
   "dependencies": {
     "@babel/polyfill": "^7.12.1",

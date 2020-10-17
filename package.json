@@ -1,6 +1,11 @@
 {
   "name": "xdls",
-  "author": "a cross domain localstorage interface",
+  "version": "1.0.0",
+  "description": "a cross domain localstorage interface",
+  "main": "./client/build/module.min.js",
   "author": "taky@taky.com",
-  "version": "1.0.0"
+  "dependencies": {
+    "@babel/polyfill": "^7.12.1",
+    "lodash": "^4.17.20"
+  }
 }
