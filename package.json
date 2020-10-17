@@ -1,5 +1,6 @@
 {
-  "name": "xdomls",
+  "name": "xdls",
+  "author": "a cross domain localstorage interface",
   "author": "taky@taky.com",
   "version": "1.0.0"
 }

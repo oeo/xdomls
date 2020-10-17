@@ -1,0 +1,46 @@
+<!-- vim: set expandtab tabstop=2 shiftwidth=2 softtabstop=2 -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <script src="../../client/build/module.min.js"></script>
+  </head>
+  <body>
+    <script>
+
+      // init client
+      var client = new XDLS('../../iframe/build/index.html')
+
+      // not ready, will return e
+      client.ping(function(e,r){
+        console.log(e)
+      })
+
+      // ready
+      client.ready(function(){
+        console.log('Client ready, session details:',client.session)
+
+        // ping the frame
+        client.ping(function(e,r){
+          console.log('`ping()` result:',r)
+        })
+
+        // set a value (doesn't require callback)
+        client.set('hello-temp','temp-value',30);
+
+        // delete a value (doesn't require callback)
+        client.del('hello')
+
+        // get all values
+        client.get_all(function(e,r){
+          console.log('`get_all()` result:',r)
+        })
+
+      })
+
+    </script>
+  </body>
+</html>
+
