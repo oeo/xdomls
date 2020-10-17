@@ -4,6 +4,7 @@
   "description": "a cross domain localstorage interface",
   "main": "./client/build/module.min.js",
   "author": "taky@taky.com",
+  "homepage": "https://github.com/tosadvisor/xdomls",
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
     "lodash": "^4.17.20"
