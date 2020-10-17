@@ -68,7 +68,7 @@ see example usage in `test/example/`
 
 ### api
 |fn|description|alias|
-|-|-|-|-|-|
+|-|-|-|
 |`setItem(key,val,[expires_secs=0],[cb)`|set item into cross-domain storage, allows for optional expiration time|`set`|
 |`getItem(key,cb)`|retrieve item from cross-domain storage|`get`|
 |`get_all([simple=true],cb)`|retrieve all items from cross-domain storage|none|
