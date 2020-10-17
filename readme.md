@@ -70,10 +70,10 @@ see example usage in `test/example/`
 ### api
 |fn|args|description|alias|
 |-|-|-|-|
-|`setItem`|`(key,val,[expires_secs=0],[cb])`|set item into cross-domain storage, allows for optional expiration time|`set`|
-|`getItem`|`(key,cb)`|retrieve item from cross-domain storage|`get`|
+|`set`|`(key,val,[expires_secs=0],[cb])`|set item into cross-domain storage, allows for optional expiration time|`setItem`|
+|`get`|`(key,cb)`|retrieve item from cross-domain storage|`getItem`|
 |`get_all`|`([simple=true],cb)`|retrieve all items from cross-domain storage|none|
-|`removeItem`|`(key,[cb])`|remove item from cross-domain storage|`del`|
+|`del`|`(key,[cb])`|remove item from cross-domain storage|`removeItem`|
 |`clear`|`([cb])`|clears all items from storage including the user's unique id|none|
 |`sync`|`([cb])`|syncs all items from frame-storage into the top window's localStorage object|none|
 
