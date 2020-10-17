@@ -77,6 +77,7 @@ see example usage in `test/example/`
 |`clear`|`([cb])`|clears all items from storage including the user's unique id|none|
 |`sync`|`([cb])`|syncs all items from frame-storage into the top window's localStorage object|none|
 
+
 `client.session` is available containing the user's unique id and unix time of original session creation always after `client.ready` has returned.
 
 ---
