@@ -79,7 +79,7 @@ see example usage in `test/example/`
 |`get_all`|`([simple=true],cb)`|retrieve all items from cross-domain storage|none|
 |`removeItem`|`(key,[cb])`|remove item from cross-domain storage|`del`|
 |`clear`|`([cb])`|clears all items from storage including the user's unique id|none|
-|`sync`|`([cb])`|syncs all items from frame-storage into the top documents localStorage object|none|
+|`sync`|`([cb])`|syncs all items from frame-storage into the top window's localStorage object|none|
 
 `client.session` is available containing the user's unique id and unix time of original session creation always after `client.ready` has returned.
 
