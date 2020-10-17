@@ -122,8 +122,8 @@
             ifr = document.createElement('iframe');
             ifr.id = '__xdls';
             ifr.src = _this.IFRAME_URL;
-            ifr.visibility = 'none';
-            ifr.display = 'none';
+            ifr.style.visibility = 'none';
+            ifr.style.display = 'none';
             _this.IFRAME = ifr;
             return document.body.appendChild(ifr);
           }

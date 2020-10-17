@@ -55,8 +55,8 @@ module.exports = class Client
         ifr.id = '__xdls'
         ifr.src = @IFRAME_URL
 
-        ifr.visibility = 'none'
-        ifr.display = 'none'
+        ifr.style.visibility = 'none'
+        ifr.style.display = 'none'
 
         @IFRAME = ifr
         document.body.appendChild(ifr)
