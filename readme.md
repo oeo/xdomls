@@ -13,7 +13,7 @@
 
 ```
 
-*xdomls* is a cross-domain localstorage implementation that uses `postMessage` to communicate with a child frame to achieve consistent
+`xdomls` is a cross-domain localstorage implementation that uses `postMessage` to communicate with a child frame to achieve consistent
 storage across domains.
 
 ## usage:
