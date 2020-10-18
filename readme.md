@@ -108,6 +108,10 @@ new XDOMLS('http://www.taky.com/un/xdomls/iframe/build/index.html',{
 
 see example usage in `test/example/`
 
+
+## @todo:
+- [ ] hash location frame communication fallback (safari7+ circumvent)
+
 ## api
 |fn|args|description|alias|
 |-|-|-|-|
@@ -119,8 +123,4 @@ see example usage in `test/example/`
 |`get_expired`|`([simple=true],cb)`|retrieve list of any keys expired this session|none|
 |`session`|`([refresh=false],[cb])`|get session information, reset session if refresh is true|none|
 |`sync`|none|syncs top.localStorage and cross browser storage automatically|none|
-
-## @todo:
-- [ ] cookie storage method fallback
-- [ ] hash location frame communication fallback
 
