@@ -13,15 +13,15 @@
 storage across domains. it has the ability to automatically sync between the cross browser frame and the top level `localStorage` object
 without any configuration, making native use of `localStorage` across different websites very easy.
 
-## usage:
-- upload `iframe/build/index.html` to a common domain or public s3 bucket
-
-### install via npm
+## install
 ```
 npm install xdomls
 ```
 
-use in bundled apps
+### usage
+- upload `iframe/build/index.html` to a common domain or public s3 bucket
+
+### use in bundled applications
 ```javascript
 XDOMLS = require('xdomls')
 ```
@@ -118,7 +118,7 @@ new XDOMLS('http://www.taky.com/un/xdomls/iframe/build/index.html',{
 
 see example usage in `test/example/`
 
-### api
+## api
 |fn|args|description|alias|
 |-|-|-|-|
 |`set`|`(key,val,[expires_secs=0],[cb])`|set item into cross-domain storage, allows for optional expiration time|`setItem`|
@@ -130,12 +130,7 @@ see example usage in `test/example/`
 |`session`|`([refresh=false],[cb])`|get session information, reset session if refresh is true|none|
 |`sync`|none|syncs top.localStorage and cross browser storage automatically|none|
 
-
-`client.SESSION` is available containing the user's unique id and unix time of original session creation always after `client.ready` has returned.
-
----
-
-#### @todo:
+## @todo:
 - [ ] cookie storage method fallback
 - [ ] hash location frame communication fallback
 
