@@ -1,6 +1,6 @@
 {
   "name": "xdomls",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "a cross domain localstorage interface",
   "main": "./client/build/module.min.js",
   "author": "taky@taky.com",
