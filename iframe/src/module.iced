@@ -191,5 +191,5 @@ if !module.parent
     prefix: iframe.PREFIX
   }
 
-  log "ifr rdy", new Date
+  log "ifr rdy", iframe.SESSION
 

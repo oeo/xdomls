@@ -174,6 +174,9 @@ module.exports = class Client
     await @sync_from defer e
     if e then console.error(e)
 
+    await @sync_to defer e
+    if e then console.error(e)
+
     _poll_from = (=>
       @sync_from (e) ->
         if e then console.error(e)

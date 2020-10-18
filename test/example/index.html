@@ -5,47 +5,116 @@
     <title></title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="../../client/build/module.min.js"></script>
   </head>
   <body>
+
     <script>
-      // init client
-      var client = new XDLS('../../iframe/build/index.html',{
+      window.client = new XDOMLS('http://www.taky.com/un/xdomls/iframe/build/index.html',{
+
         debug: true,
-        show_frame: true
+        debug_frame: true,
+        show_frame: true,
+
+        // keys to skip auto-syncing to cross-domain storage
+        sync_ignore_keys: [
+          'private-key'
+        ],
+
+        // communication interval between window.top and frame
+        sync_polling_ms: 100,
       })
 
-      window.client = client
-
-      // not ready, will return e
-      client.ping(function(e,r){
-        console.log(e)
-      })
-
-      // ready
+      // init
       client.ready(function(){
-        console.log('Client ready, session details:',client.session)
-
-        // ping the frame
-        client.ping(function(e,r){
-          console.log('`ping()` result:',r)
-        })
-
-        client.clear()
-
-        // set a value (doesn't require callback)
-        client.set('hello-temp','temp-value');
-
-        // get all values
-        client.get_all(function(e,r){
-          console.log('`get_all()` result:',r)
-        })
-
-        // watch for changes and send to frame
-        //client.connect()
-
+        client.sync()
       })
 
+    </script>
+
+    <!--
+      controls
+    -->
+
+    <p>
+      <ul>
+        <li><a class="clear-all" href="#">clear()</a></li>
+        <li><a class="show-ls" href="#">log localStorage</a></li>
+        <li><a class="get-all" href="#">log iframe.get_all()</a></li>
+        <li><a class="session" href="#">log iframe.session()</a></li>
+        <li><a class="session-refresh" href="#">get a new XDOMLS uuid session</a></li>
+        <li><a class="set-normal-item" href="#">set a normal localStorage item</a></li>
+        <li><a class="set-iframe-item" href="#">set a cross-domain storage item</a></li>
+        <li><a class="set-expiring-item" href="#">set a cross-domain storage item that expires in 30s</a></li>
+      </ul>
+    </p>
+
+    <script>
+    $(function(){
+      $('a.clear-all').click(function(e){
+        e.preventDefault()
+        client.clear()
+        localStorage.clear()
+      })
+
+      $('a.show-ls').click(function(e){
+        e.preventDefault()
+        return console.log(JSON.stringify(localStorage,null,2))
+      })
+
+      $('a.get-all').click(function(e){
+        e.preventDefault()
+        client.get_all(function(e,r){
+          if(e){
+            throw e;
+          }
+          console.log(JSON.stringify(r,null,2));
+        })
+      })
+
+      $('a.session').click(function(e){
+        e.preventDefault()
+        client.session(function(e,r){
+          if(e){
+            throw e;
+          }
+          console.log(JSON.stringify(r,null,2));
+        })
+      })
+
+      $('a.session-refresh').click(function(e){
+        e.preventDefault()
+        client.session(true,function(e,r){
+          if(e){
+            throw e;
+          }
+          console.log(JSON.stringify(r,null,2));
+        })
+      })
+
+      $('a.set-normal-item').click(function(e){
+        e.preventDefault()
+        var key = 'item_' + Math.random().toString().split('.').pop()
+        localStorage[key] = new Date().getTime()
+        console.log('Set `window.localStorage.' + key + '`')
+      })
+
+      $('a.set-iframe-item').click(function(e){
+        e.preventDefault()
+        var key = 'item_' + Math.random().toString().split('.').pop()
+        client.set(key,new Date().getTime())
+        console.log('Set on XDOMLS client: `' + key + '`')
+      })
+
+      $('a.set-expiring-item').click(function(e){
+        e.preventDefault()
+        var key = 'item_expires_' + Math.random().toString().split('.').pop()
+        client.set(key, 'temporary-key-value', 15)
+        console.log('Set on XDOMLS item: `' + key + '` (expires in 15s)')
+      })
+
+    })
     </script>
   </body>
 </html>

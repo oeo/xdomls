@@ -255,7 +255,7 @@
       session: iframe.SESSION,
       prefix: iframe.PREFIX
     });
-    log("ifr rdy", new Date);
+    log("ifr rdy", iframe.SESSION);
   }
 
 }).call(this);

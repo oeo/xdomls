@@ -339,56 +339,76 @@
           if (e) {
             console.error(e);
           }
-          _poll_from = (function() {
-            return _this.sync_from(function(e) {
-              if (e) {
-                return console.error(e);
-              }
+          (function(__iced_k) {
+            __iced_deferrals = new iced.Deferrals(__iced_k, {
+              parent: ___iced_passed_deferral,
+              filename: "/home/taky/www/un/xdomls/client/src/module.iced",
+              funcname: "Client"
             });
-          });
-          _this.HASH_WATCHING = true;
-          _poll_to = (function() {
-            if (!_this.HASH_WATCHING) {
-              return;
+            _this.sync_to(__iced_deferrals.defer({
+              assign_fn: (function() {
+                return function() {
+                  return e = arguments[0];
+                };
+              })(),
+              lineno: 176
+            }));
+            __iced_deferrals._fulfill();
+          })(function() {
+            if (e) {
+              console.error(e);
             }
-            if (!_this.HASH) {
-              _this.HASH = _this._local_hash();
-              return;
-            }
-            if (_this._local_hash() !== _this.HASH) {
-              _this.HASH = _this._local_hash();
-              return emitter.emit('LOCAL_CHANGE');
-            }
-          });
-          emitter.on('LOCAL_CHANGE', (function(e) {
-            var ___iced_passed_deferral1, __iced_deferrals, __iced_k;
-            __iced_k = __iced_k_noop;
-            ___iced_passed_deferral1 = iced.findDeferral(arguments);
-            _this.HASH_WATCHING = false;
-            (function(__iced_k) {
-              __iced_deferrals = new iced.Deferrals(__iced_k, {
-                parent: ___iced_passed_deferral1,
-                filename: "/home/taky/www/un/xdomls/client/src/module.iced"
+            _poll_from = (function() {
+              return _this.sync_from(function(e) {
+                if (e) {
+                  return console.error(e);
+                }
               });
-              _this.sync_to(__iced_deferrals.defer({
-                assign_fn: (function() {
-                  return function() {
-                    return e = arguments[0];
-                  };
-                })(),
-                lineno: 198
-              }));
-              __iced_deferrals._fulfill();
-            })(function() {
-              if (e) {
-                console.error(e);
-              }
-              _this.HASH = null;
-              return _this.HASH_WATCHING = true;
             });
-          }));
-          setInterval(_poll_to, _this.options.sync_polling_ms);
-          return setInterval(_poll_from, _this.options.sync_polling_ms);
+            _this.HASH_WATCHING = true;
+            _poll_to = (function() {
+              if (!_this.HASH_WATCHING) {
+                return;
+              }
+              if (!_this.HASH) {
+                _this.HASH = _this._local_hash();
+                return;
+              }
+              if (_this._local_hash() !== _this.HASH) {
+                _this.HASH = _this._local_hash();
+                return emitter.emit('LOCAL_CHANGE');
+              }
+            });
+            emitter.on('LOCAL_CHANGE', (function(e) {
+              var ___iced_passed_deferral1, __iced_deferrals, __iced_k;
+              __iced_k = __iced_k_noop;
+              ___iced_passed_deferral1 = iced.findDeferral(arguments);
+              _this.HASH_WATCHING = false;
+              (function(__iced_k) {
+                __iced_deferrals = new iced.Deferrals(__iced_k, {
+                  parent: ___iced_passed_deferral1,
+                  filename: "/home/taky/www/un/xdomls/client/src/module.iced"
+                });
+                _this.sync_to(__iced_deferrals.defer({
+                  assign_fn: (function() {
+                    return function() {
+                      return e = arguments[0];
+                    };
+                  })(),
+                  lineno: 201
+                }));
+                __iced_deferrals._fulfill();
+              })(function() {
+                if (e) {
+                  console.error(e);
+                }
+                _this.HASH = null;
+                return _this.HASH_WATCHING = true;
+              });
+            }));
+            setInterval(_poll_to, _this.options.sync_polling_ms);
+            return setInterval(_poll_from, _this.options.sync_polling_ms);
+          });
         };
       })(this));
     });
