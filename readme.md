@@ -1,17 +1,8 @@
-```
-              888                        888
-              888                        888
-              888                        888
-888  888  .d88888  .d88b.  88888b.d88b.  888 .d8888b
-`Y8bd8P' d88" 888 d88""88b 888 "888 "88b 888 88K
-  X88K   888  888 888  888 888  888  888 888 "Y8888b.
-.d8""8b. Y88b 888 Y88..88P 888  888  888 888      X88
-888  888  "Y88888  "Y88P"  888  888  888 888  88888P'
-```
+![xdomls](https://raw.githubusercontent.com/tosadvisor/xdomls/master/readme.svg?raw=true&sanitize=true "xdomls")
 
-`xdomls` is a cross-domain localstorage implementation that uses `postMessage` to communicate with a child frame to achieve consistent
-storage across domains. it has the ability to automatically sync between the cross browser frame and the top level `localStorage` object
-without any configuration, making native use of `localStorage` across different websites very easy.
+`xdomls` is a localStorage augmentation that uses `postMessage` to communicate with a child frame to achieve persistent
+storage across domains. it has the ability to automatically sync between the cross browser frame and the top `localStorage` object
+without any configuration, making native use of `localStorage` across different domains frictionless.
 
 ## install
 ```
@@ -43,11 +34,11 @@ client.ready(function(){
   // now simply set an item into normal `localStorage` and it will automatically
   // sync into cross-domain frame storage.
 
-  // similarly, if you set an item into the cross domain storage it will automatically
-  // propogate upwards to your top level `localStorage` object
+  // similarly, if you set an item into the cross domain storage directly it will automatically
+  // propogate up to your top level `localStorage` object.
 
-  // note: if you set an item in cross domain storage that expires, it will also be removed
-  // automatically in your `localStorage` object as well as it expires!
+  // note: if you set an item in cross domain storage with an expiration, it will also be removed
+  // automatically in your `localStorage` object as well as it expires (and without refreshing!)
 })
 ```
 
@@ -58,7 +49,7 @@ client.ready(function(){
   // client will automatically be assigned a persistent unique identifier
   console.log('Client ready, session details:',client.SESSION)
 
-  // set a persistent value
+  // set a persistent value into the frame
   client.set('hello-perma','perma-value')
 
   // set a value that expires in 30s
@@ -67,7 +58,7 @@ client.ready(function(){
   // delete a value
   client.del('hello')
 
-  // get all values
+  // get all values from frame
   client.get_all(function(e,r){
     console.log(r)
   })
