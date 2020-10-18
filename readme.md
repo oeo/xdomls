@@ -9,16 +9,15 @@ without any configuration, making native use of `localStorage` across different 
 npm install xdomls
 ```
 
-### usage
 - upload `iframe/build/index.html` to a common domain or public s3 bucket
 
-### use in bundled applications
+### use in bundled apps
 ```javascript
 XDOMLS = require('xdomls')
 ```
 
 ### use in browser
-or simply include `client/build/module.min.js` in your browser which exposes `window.XDLS`
+or simply include `client/build/module.min.js` in your browser which exposes `window.XDOMLS`
 
 ```javascript
 // simple usage
