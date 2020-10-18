@@ -55,7 +55,7 @@ client.ready(function(){
 // additional functionality (can be used with or without sync)
 client.ready(function(){
 
-  // client will automatically be given a persistent uuid available in `client.session.uuid`
+  // client will automatically be assigned a persistent unique identifier
   console.log('Client ready, session details:',client.SESSION)
 
   // set a persistent value
