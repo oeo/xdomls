@@ -6,14 +6,23 @@ DEBUG = false
 log = (x...) -> if DEBUG then try console.log x...
 query = require('querystring').parse(location.search.substr(1))
 
+if query.debug then DEBUG = true
+
 _ = require 'lodash'
 {nanoid} = require 'nanoid'
 
 ##
 module.exports = iframe = {
-  PREFIX: 'xdls'
+  PREFIX: 'xdomls'
   SESSION: null
+
+  options: {
+    expire_polling_ms: 100
+  }
 }
+
+# custom prefix
+if query.prefix then iframe.PREFIX = query.prefix
 
 iframe.ping = (->
   return {pong:@_time()}
@@ -66,6 +75,17 @@ iframe.get_all = ((simple=true) ->
   return ret
 )
 
+iframe.get_expired = ((simple=true) ->
+  @expire()
+
+  return null if !@_expired_keys
+
+  if simple
+    return _.map @_expired_keys, 'key'
+  else
+    return @_expired_keys
+)
+
 iframe.del = iframe.removeItem = ((key) ->
   key = [@PREFIX,key].join('~') if !key.startsWith(@PREFIX)
   try delete localStorage[key]
@@ -79,6 +99,7 @@ iframe.del_all = iframe.clear = (->
   i = 0
   for k,v of localStorage
     if k.startsWith(@PREFIX)
+      continue if k.substr("#{@PREFIX}~".length) is '__session'
       i += 1
       delete localStorage[k]
 
@@ -89,37 +110,54 @@ iframe.del_all = iframe.clear = (->
 
 iframe.expire = (->
   items = @get_all(false)
-  i = 0
+  just_expired = []
 
   for x in items
     if !x.etime then continue
 
     if @_time() > x.etime
-      i += 1
-      iframe.del x.key
+      log "ifr expired key", x.key
 
-  if i > 0
-    log "ifr expire", i
+      @del x.key
+      @_expired_keys.push x
+      @_send {expire_key:x.key}
 
   return true
 )
 
-iframe.session = (->
-  if !@get('__session')
-    @set "__session", (session_obj = {uuid:nanoid(),ctime:@_time()})
+iframe.session = ((refresh=false) ->
+  if !@get('__session') or refresh
+    @set "__session", (session_obj = {
+      uuid: nanoid()
+      ctime: @_time()
+      prefix: @PREFIX
+    })
+
+    @SESSION = session_obj
+
+    log 'ifr new session', session_obj
+
   return @SESSION = @get('__session')
 )
 
 ##
 iframe._init = (->
   @clear() if query.clear
-  @expire()
   @session()
+
+  @expire()
+
+  setInterval((=>
+    @expire()
+  ),@options.expire_polling_ms)
 )
 
 iframe._listen = (->
   addEventListener('message',((e) =>
-    data = JSON.parse(e.data)
+    try
+      data = JSON.parse(e.data)
+    catch
+      return false
     if (fn = data.request?.fn) and this[fn]
       result = this[fn].apply(@,(data.request?.args ? []))
       return @_send(result,data.id)
@@ -141,12 +179,17 @@ iframe._send = ((data,request_id=null) ->
 )
 
 iframe._time = -> Math.round(new Date().getTime()/1000)
+iframe._expired_keys = []
 
 ##
 if !module.parent
   iframe._init()
   iframe._listen()
-  iframe._send {message:'rdy',session:iframe.SESSION}
+  iframe._send {
+    message: 'rdy'
+    session: iframe.SESSION
+    prefix: iframe.PREFIX
+  }
 
   log "ifr rdy", new Date
 

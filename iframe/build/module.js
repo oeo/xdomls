@@ -18,14 +18,25 @@
 
   query = require('querystring').parse(location.search.substr(1));
 
+  if (query.debug) {
+    DEBUG = true;
+  }
+
   _ = require('lodash');
 
   nanoid = require('nanoid').nanoid;
 
   module.exports = iframe = {
-    PREFIX: 'xdls',
-    SESSION: null
+    PREFIX: 'xdomls',
+    SESSION: null,
+    options: {
+      expire_polling_ms: 100
+    }
   };
+
+  if (query.prefix) {
+    iframe.PREFIX = query.prefix;
+  }
 
   iframe.ping = (function() {
     return {
@@ -99,6 +110,21 @@
     return ret;
   });
 
+  iframe.get_expired = (function(simple) {
+    if (simple == null) {
+      simple = true;
+    }
+    this.expire();
+    if (!this._expired_keys) {
+      return null;
+    }
+    if (simple) {
+      return _.map(this._expired_keys, 'key');
+    } else {
+      return this._expired_keys;
+    }
+  });
+
   iframe.del = iframe.removeItem = (function(key) {
     var simple_key;
     if (!key.startsWith(this.PREFIX)) {
@@ -117,6 +143,9 @@
     for (k in localStorage) {
       v = localStorage[k];
       if (k.startsWith(this.PREFIX)) {
+        if (k.substr(("" + this.PREFIX + "~").length) === '__session') {
+          continue;
+        }
         i += 1;
         delete localStorage[k];
       }
@@ -126,32 +155,39 @@
   });
 
   iframe.expire = (function() {
-    var i, items, x, _i, _len;
+    var items, just_expired, x, _i, _len;
     items = this.get_all(false);
-    i = 0;
+    just_expired = [];
     for (_i = 0, _len = items.length; _i < _len; _i++) {
       x = items[_i];
       if (!x.etime) {
         continue;
       }
       if (this._time() > x.etime) {
-        i += 1;
-        iframe.del(x.key);
+        log("ifr expired key", x.key);
+        this.del(x.key);
+        this._expired_keys.push(x);
+        this._send({
+          expire_key: x.key
+        });
       }
-    }
-    if (i > 0) {
-      log("ifr expire", i);
     }
     return true;
   });
 
-  iframe.session = (function() {
+  iframe.session = (function(refresh) {
     var session_obj;
-    if (!this.get('__session')) {
+    if (refresh == null) {
+      refresh = false;
+    }
+    if (!this.get('__session') || refresh) {
       this.set("__session", (session_obj = {
         uuid: nanoid(),
-        ctime: this._time()
+        ctime: this._time(),
+        prefix: this.PREFIX
       }));
+      this.SESSION = session_obj;
+      log('ifr new session', session_obj);
     }
     return this.SESSION = this.get('__session');
   });
@@ -160,15 +196,24 @@
     if (query.clear) {
       this.clear();
     }
+    this.session();
     this.expire();
-    return this.session();
+    return setInterval(((function(_this) {
+      return function() {
+        return _this.expire();
+      };
+    })(this)), this.options.expire_polling_ms);
   });
 
   iframe._listen = (function() {
     return addEventListener('message', ((function(_this) {
       return function(e) {
         var data, fn, result, _ref, _ref1, _ref2;
-        data = JSON.parse(e.data);
+        try {
+          data = JSON.parse(e.data);
+        } catch (_error) {
+          return false;
+        }
         if ((fn = (_ref = data.request) != null ? _ref.fn : void 0) && _this[fn]) {
           result = _this[fn].apply(_this, (_ref1 = (_ref2 = data.request) != null ? _ref2.args : void 0) != null ? _ref1 : []);
           return _this._send(result, data.id);
@@ -200,12 +245,15 @@
     return Math.round(new Date().getTime() / 1000);
   };
 
+  iframe._expired_keys = [];
+
   if (!module.parent) {
     iframe._init();
     iframe._listen();
     iframe._send({
       message: 'rdy',
-      session: iframe.SESSION
+      session: iframe.SESSION,
+      prefix: iframe.PREFIX
     });
     log("ifr rdy", new Date);
   }

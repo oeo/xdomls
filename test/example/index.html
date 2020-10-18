@@ -9,9 +9,13 @@
   </head>
   <body>
     <script>
-
       // init client
-      var client = new XDLS('../../iframe/build/index.html')
+      var client = new XDLS('../../iframe/build/index.html',{
+        debug: true,
+        show_frame: true
+      })
+
+      window.client = client
 
       // not ready, will return e
       client.ping(function(e,r){
@@ -27,16 +31,18 @@
           console.log('`ping()` result:',r)
         })
 
-        // set a value (doesn't require callback)
-        client.set('hello-temp','temp-value',30);
+        client.clear()
 
-        // delete a value (doesn't require callback)
-        client.del('hello')
+        // set a value (doesn't require callback)
+        client.set('hello-temp','temp-value');
 
         // get all values
         client.get_all(function(e,r){
           console.log('`get_all()` result:',r)
         })
+
+        // watch for changes and send to frame
+        //client.connect()
 
       })
 

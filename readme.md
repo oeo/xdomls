@@ -10,7 +10,8 @@
 ```
 
 `xdomls` is a cross-domain localstorage implementation that uses `postMessage` to communicate with a child frame to achieve consistent
-storage across domains.
+storage across domains. it has the ability to automatically sync between the cross browser frame and the top level `localStorage` object
+without any configuration, making native use of `localStorage` across different websites very easy.
 
 ## usage:
 - upload `iframe/build/index.html` to a common domain or public s3 bucket
@@ -22,47 +23,97 @@ npm install xdomls
 
 use in bundled apps
 ```javascript
-XDLS = require('xdomls')
+XDOMLS = require('xdomls')
 ```
 
 ### use in browser
 or simply include `client/build/module.min.js` in your browser which exposes `window.XDLS`
 
 ```javascript
+// simple usage
 var iframe_url = 'http://yourcdn.com/iframe.html'
 
 // init client, this will automatically wait for `document.readyState`
 // to either be 'interactive' or 'complete' and then append the iframe
-var client = new XDLS(iframe_url);
+var client = new XDOMLS(iframe_url);
 
-// not ready, will return e
-client.ping(function(e,r){
-  console.log(e)
+client.ready(function(){
+  client.sync()
+
+  // now simply set an item into normal `localStorage` and it will automatically
+  // sync into cross-domain frame storage.
+
+  // similarly, if you set an item into the cross domain storage it will automatically
+  // propogate upwards to your top level `localStorage` object
+
+  // note: if you set an item in cross domain storage that expires, it will also be removed
+  // automatically in your `localStorage` object as well as it expires!
 })
+```
 
-// wait for ready
+```javascript
+// additional functionality (can be used with or without sync)
 client.ready(function(){
 
   // client will automatically be given a persistent uuid available in `client.session.uuid`
-  console.log('Client ready, session details:',client.session)
+  console.log('Client ready, session details:',client.SESSION)
 
-  // ping the frame
-  client.ping(function(e,r){
-    console.log('`ping()` result:',r)
-  })
+  // set a persistent value
+  client.set('hello-perma','perma-value')
 
-  // set a value that expires in 30 seconds (doesn't require callback)
+  // set a value that expires in 30s
   client.set('hello-temp','temp-value',30);
 
-  // delete a value (doesn't require callback)
+  // delete a value
   client.del('hello')
 
   // get all values
   client.get_all(function(e,r){
-    console.log('`get_all()` result:',r)
+    console.log(r)
   })
 
 })
+```
+
+```javascript
+// instantiation options
+new XDOMLS('http://www.taky.com/un/xdomls/iframe/build/index.html',{
+
+  // prefix for all keys within the cross browser frame
+  prefix: 'tracking'
+
+  // console logging for client
+  debug: true,
+
+  // console logging for cross browser frame
+  debug_frame: true,
+
+  // shows iframe instead of applying styles to hide it
+  show_frame: true,
+
+  // keys to skip auto-syncing for
+  sync_ignore_keys: [
+    'private-key'
+  ],
+
+  // sync interval between window.top and cross browser frame
+  sync_polling_ms: 100,
+
+  // cross browser from element id
+  frame_id: 'persistent-storage',
+
+})
+
+// defaults
+{
+  prefix: 'xd'
+  debug: false
+  debug_frame: false
+  show_frame: false
+  sync_ignore_keys: []
+  sync_polling_ms: 100
+  frame_id: '__xdomls'
+}
 ```
 
 see example usage in `test/example/`
@@ -74,17 +125,17 @@ see example usage in `test/example/`
 |`get`|`(key,cb)`|retrieve item from cross-domain storage|`getItem`|
 |`get_all`|`([simple=true],cb)`|retrieve all items from cross-domain storage|none|
 |`del`|`(key,[cb])`|remove item from cross-domain storage|`removeItem`|
-|`clear`|`([cb])`|clears all items from storage including the user's unique id|none|
-|`sync`|`([cb])`|syncs all items from frame-storage into the top window's localStorage object|none|
+|`clear`|`([cb])`|clears all items from xdomls and localStorage (besides the user's session/uuid)|none|
+|`get_expired`|`([simple=true],cb)`|retrieve list of any keys expired this session|none|
+|`session`|`([refresh=false],[cb])`|get session information, reset session if refresh is true|none|
+|`sync`|none|syncs top.localStorage and cross browser storage automatically|none|
 
 
-`client.session` is available containing the user's unique id and unix time of original session creation always after `client.ready` has returned.
+`client.SESSION` is available containing the user's unique id and unix time of original session creation always after `client.ready` has returned.
 
 ---
 
 #### @todo:
-- [ ] cookie fallback
-- [ ] hash location parsing fallback for devices not supporting `postMessage` coms
-- [ ] option to automatically sync to iframe when localStorage is changed on the parent (watch window.top localStorage object)
-- [ ] remove lodash
+- [ ] cookie storage method fallback
+- [ ] hash location frame communication fallback
 
