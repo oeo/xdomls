@@ -1,7 +1,7 @@
 {
   "name": "xdomls",
   "version": "1.4.0",
-  "description": "a cross domain localstorage interface",
+  "description": "crossdomain for localstorage",
   "main": "./client/build/module.min.js",
   "author": "taky@taky.com",
   "homepage": "https://github.com/tosadvisor/xdomls",
