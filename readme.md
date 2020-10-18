@@ -4,40 +4,31 @@
 storage across domains. it has the ability to automatically sync between the cross browser frame and the top `localStorage` object
 without any configuration, making native use of `localStorage` across different domains frictionless.
 
-## install
+## getting started
+
+- upload `iframe/build/index.html` to a common domain or public s3 bucket
+
+### bundled apps
 ```
 npm install xdomls
 ```
 
-- upload `iframe/build/index.html` to a common domain or public s3 bucket
-
-### use in bundled apps
 ```javascript
 XDOMLS = require('xdomls')
 ```
 
-### use in browser
-or simply include `client/build/module.min.js` in your browser which exposes `window.XDOMLS`
+### normal pages
+including the script `client/build/module.min.js` in your page will expose `window.XDOMLS`
+
+### usage
+just init the client using the code below and then use `localStorage` as you normally would
 
 ```javascript
 // simple usage
-var iframe_url = 'http://yourcdn.com/iframe.html'
-
-// init client, this will automatically wait for `document.readyState`
-// to either be 'interactive' or 'complete' and then append the iframe
-var client = new XDOMLS(iframe_url);
+var client = new XDOMLS('http://yourcdn.com/iframe.html');
 
 client.ready(function(){
   client.sync()
-
-  // now simply set an item into normal `localStorage` and it will automatically
-  // sync into cross-domain frame storage.
-
-  // similarly, if you set an item into the cross domain storage directly it will automatically
-  // propogate up to your top level `localStorage` object.
-
-  // note: if you set an item in cross domain storage with an expiration, it will also be removed
-  // automatically in your `localStorage` object as well as it expires (and without refreshing!)
 })
 ```
 
@@ -108,19 +99,22 @@ new XDOMLS('http://www.taky.com/un/xdomls/iframe/build/index.html',{
 
 see example usage in `test/example/`
 
+## tested in
+- [x] latest version of all major browsers
+- [x] latest version ios/safari
 
 ## @todo:
-- [ ] hash location frame communication fallback (safari7+ circumvent)
+- [ ] frame location.hash communication mechanism as a `postMessage` fallback
 
 ## api
-|fn|args|description|alias|
-|-|-|-|-|
-|`set`|`(key,val,[expires_secs=0],[cb])`|set item into cross-domain storage, allows for optional expiration time|`setItem`|
-|`get`|`(key,cb)`|retrieve item from cross-domain storage|`getItem`|
-|`get_all`|`([simple=true],cb)`|retrieve all items from cross-domain storage|none|
-|`del`|`(key,[cb])`|remove item from cross-domain storage|`removeItem`|
-|`clear`|`([cb])`|clears all items from xdomls and localStorage (besides the user's session/uuid)|none|
-|`get_expired`|`([simple=true],cb)`|retrieve list of any keys expired this session|none|
-|`session`|`([refresh=false],[cb])`|get session information, reset session if refresh is true|none|
-|`sync`|none|syncs top.localStorage and cross browser storage automatically|none|
+|fn|args|description
+|-|-|-|
+|`set`|`key,val,[expires_secs=0],[cb]`|set item into cross-domain storage, allows for optional expiration time|
+|`get`|`key,cb`|retrieve item from cross-domain storage|
+|`get_all`|`[simple=true],cb`|retrieve all items from cross-domain storage|
+|`del`|`key,[cb]`|remove item from cross-domain storage|
+|`clear`|`[cb]`|clears all items from xdomls and localStorage (besides the user's session/uuid)|
+|`get_expired`|`[simple=true],cb`|retrieve list of any keys expired this session|
+|`session`|`[refresh=false],[cb]`|get session information, reset session if refresh is true|
+|`sync`|none|syncs top.localStorage and frame storage automatically|
 
