@@ -137,13 +137,15 @@
             addEventListener('message', (function(e) {
               var data, _ref;
               data = e.data;
-              data = JSON.parse(e.data);
-              if ((data != null ? (_ref = data.response) != null ? _ref.message : void 0 : void 0) === 'rdy') {
-                _this.SESSION = data.response.session;
-                _this.READY = true;
-                log('client rdy', _this.SESSION);
-                _this._listen_expires();
-                return next();
+              if (typeof e.data === 'string') {
+                data = JSON.parse(e.data);
+                if ((data != null ? (_ref = data.response) != null ? _ref.message : void 0 : void 0) === 'rdy') {
+                  _this.SESSION = data.response.session;
+                  _this.READY = true;
+                  log('client rdy', _this.SESSION);
+                  _this._listen_expires();
+                  return next();
+                }
               }
             }), false);
             ifr = document.createElement('iframe');
@@ -192,7 +194,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/home/taky/www/un/xdomls/client/src/module.iced",
+            filename: "/home/adam/projects/xdomls/client/src/module.iced",
             funcname: "Client"
           });
           _this.get_all(true, __iced_deferrals.defer({
@@ -202,7 +204,7 @@
                 return keys = arguments[1];
               };
             })(),
-            lineno: 123
+            lineno: 124
           }));
           __iced_deferrals._fulfill();
         });
@@ -225,7 +227,7 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/home/taky/www/un/xdomls/client/src/module.iced",
+              filename: "/home/adam/projects/xdomls/client/src/module.iced",
               funcname: "Client"
             });
             _this.get_expired(true, __iced_deferrals.defer({
@@ -235,7 +237,7 @@
                   return expired_keys = arguments[1];
                 };
               })(),
-              lineno: 137
+              lineno: 138
             }));
             __iced_deferrals._fulfill();
           })(function() {
@@ -269,7 +271,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/home/taky/www/un/xdomls/client/src/module.iced",
+            filename: "/home/adam/projects/xdomls/client/src/module.iced",
             funcname: "Client"
           });
           _this.get_all(true, __iced_deferrals.defer({
@@ -279,7 +281,7 @@
                 return exists = arguments[1];
               };
             })(),
-            lineno: 152
+            lineno: 153
           }));
           __iced_deferrals._fulfill();
         });
@@ -321,7 +323,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/home/taky/www/un/xdomls/client/src/module.iced",
+            filename: "/home/adam/projects/xdomls/client/src/module.iced",
             funcname: "Client"
           });
           _this.sync_from(__iced_deferrals.defer({
@@ -330,7 +332,7 @@
                 return e = arguments[0];
               };
             })(),
-            lineno: 173
+            lineno: 174
           }));
           __iced_deferrals._fulfill();
         });
@@ -342,7 +344,7 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/home/taky/www/un/xdomls/client/src/module.iced",
+              filename: "/home/adam/projects/xdomls/client/src/module.iced",
               funcname: "Client"
             });
             _this.sync_to(__iced_deferrals.defer({
@@ -351,7 +353,7 @@
                   return e = arguments[0];
                 };
               })(),
-              lineno: 176
+              lineno: 177
             }));
             __iced_deferrals._fulfill();
           })(function() {
@@ -387,7 +389,7 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral1,
-                  filename: "/home/taky/www/un/xdomls/client/src/module.iced"
+                  filename: "/home/adam/projects/xdomls/client/src/module.iced"
                 });
                 _this.sync_to(__iced_deferrals.defer({
                   assign_fn: (function() {
@@ -395,7 +397,7 @@
                       return e = arguments[0];
                     };
                   })(),
-                  lineno: 201
+                  lineno: 202
                 }));
                 __iced_deferrals._fulfill();
               })(function() {
@@ -429,9 +431,11 @@
       packet.id = request_id = nanoid();
       this.IFRAME.contentWindow.postMessage(JSON.stringify(packet), '*');
       return addEventListener('message', (function(e) {
-        data = JSON.parse(e.data);
-        if (data.id === request_id) {
-          return cb(null, data.response);
+        if (typeof e.data === 'string') {
+          data = JSON.parse(e.data);
+          if (data.id === request_id) {
+            return cb(null, data.response);
+          }
         }
       }), false);
     });
@@ -440,15 +444,17 @@
       return addEventListener('message', ((function(_this) {
         return function(e) {
           var data, expired_key, _ref;
-          data = JSON.parse(e.data);
-          if (expired_key = (_ref = data.response) != null ? _ref.expire_key : void 0) {
-            log('client expiring key', expired_key);
-            _this.HASH_WATCHING = false;
-            try {
-              delete localStorage[expired_key];
-            } catch (_error) {}
-            _this.HASH = null;
-            return _this.HASH_WATCHING = true;
+          if (typeof e.data === 'string') {
+            data = JSON.parse(e.data);
+            if (expired_key = (_ref = data.response) != null ? _ref.expire_key : void 0) {
+              log('client expiring key', expired_key);
+              _this.HASH_WATCHING = false;
+              try {
+                delete localStorage[expired_key];
+              } catch (_error) {}
+              _this.HASH = null;
+              return _this.HASH_WATCHING = true;
+            }
           }
         };
       })(this)), false);
