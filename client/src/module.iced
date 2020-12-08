@@ -71,16 +71,17 @@ module.exports = class Client
 
         addEventListener('message',((e) =>
           data = e.data
-          data = JSON.parse(e.data)
-          if data?.response?.message is 'rdy'
-            @SESSION = data.response.session
-            @READY = true
+          if typeof e.data == 'string'
+            data = JSON.parse(e.data)
+            if data?.response?.message is 'rdy'
+              @SESSION = data.response.session
+              @READY = true
 
-            log 'client rdy', @SESSION
+              log 'client rdy', @SESSION
 
-            @_listen_expires()
+              @_listen_expires()
 
-            return next()
+              return next()
         ),false)
 
         ifr = document.createElement 'iframe'
@@ -223,25 +224,27 @@ module.exports = class Client
     @IFRAME.contentWindow.postMessage JSON.stringify(packet), '*'
 
     addEventListener('message',((e) ->
-      data = JSON.parse(e.data)
-      if data.id is request_id
-        return cb null, data.response
+      if typeof e.data == 'string'
+        data = JSON.parse(e.data)
+        if data.id is request_id
+          return cb null, data.response
     ),false)
   )
 
   _listen_expires: (->
     addEventListener('message',((e) =>
-      data = JSON.parse(e.data)
+      if typeof e.data == 'string'
+        data = JSON.parse(e.data)
 
-      if expired_key = data.response?.expire_key
-        log 'client expiring key', expired_key
+        if expired_key = data.response?.expire_key
+          log 'client expiring key', expired_key
 
-        @HASH_WATCHING = false
+          @HASH_WATCHING = false
 
-        try delete localStorage[expired_key]
+          try delete localStorage[expired_key]
 
-        @HASH = null
-        @HASH_WATCHING = true
+          @HASH = null
+          @HASH_WATCHING = true
 
     ),false)
   )
